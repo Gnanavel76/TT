@@ -12,7 +12,7 @@ const MY_STGY_AUTH_TOKEN = '6c074f02-0d74-447e-ba06-6a4859a01fad'
 // Entry signal from TradingView and Exit from TradeTron
 const STGY2_AUTH_TOKEN = 'c1140b16-ee9f-44b3-b1d5-8d3a36609158'
 
-const expectedFromAddress = "kashipara007@gmail.com";
+const expectedFromAddress = "noreply@tradingview.com";
 
 const getActionValues = (action) => {
     switch (action) {
