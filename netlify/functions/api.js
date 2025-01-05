@@ -43,7 +43,7 @@ router.post('/webhook', (req, res) => {
     let fromAddress = req.body.fromAddress
 
     if (alertMessage === "Sample html content") {
-        res.send("Ok")
+        return res.send("Ok")
     }
     if (fromAddress !== expectedFromAddress) {
         console.log("Email mismatch")
