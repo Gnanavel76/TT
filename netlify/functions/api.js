@@ -1,5 +1,5 @@
 import axios from 'axios';
-import express, {Router} from 'express';
+import express, { Router } from 'express';
 import serverless from "serverless-http";
 
 
@@ -38,6 +38,7 @@ router.get('/health', (req, res) => {
 });
 
 router.post('/webhook', (req, res) => {
+    console.log(req.body)
     let alertMessage = req.body.content.html
     let fromAddress = req.body.content.fromAddress
 
