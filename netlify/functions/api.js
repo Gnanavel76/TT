@@ -64,7 +64,7 @@ router.post('/webhook', (req, res) => {
         console.log("Action is null")
         return
     }
-    stopLoss = action.split("=")?.[1]
+    let stopLoss = action.split("=")?.[1]
     action = action.split("=")[0]
 
     const actionValues = getActionValues(action)
@@ -73,39 +73,60 @@ router.post('/webhook', (req, res) => {
         return
     }
 
-    axios.post(TRADETRON_URL, {
-        "auth-token": MY_STGY_AUTH_TOKEN,
-        key: actionValues.key,
-        value: actionValues.value
-    }, {
-        headers: {
-            "Content-Type": 'application/json'
-        }
-    })
-        .then((response) => {
-            res.send("OK")
-            console.log(response)
-        })
-        .catch((error) => console.error(error));
-
-    if (stopLoss) {
+    const requests = [
         axios.post(TRADETRON_URL, {
-            "auth-token": STGY2_AUTH_TOKEN,
+            "auth-token": MY_STGY_AUTH_TOKEN,
             key: actionValues.key,
-            value: actionValues.value,
-            key1: "stop_loss",
-            value1: parseFloat(stopLoss)
+            value: actionValues.value
         }, {
             headers: {
                 "Content-Type": 'application/json'
             }
         })
-            .then((response) => {
-                res.send("OK")
-                console.log(response)
+    ];
+
+    if (stopLoss) {
+        requests.push(
+            axios.post(TRADETRON_URL, {
+                "auth-token": STGY2_AUTH_TOKEN,
+                key: actionValues.key,
+                value: actionValues.value,
+                key1: "stop_loss",
+                value1: parseFloat(stopLoss)
+            }, {
+                headers: {
+                    "Content-Type": 'application/json'
+                }
             })
-            .catch((error) => console.error(error));
+        )
     }
+
+    Promise.allSettled(requests)
+        .then((results) => {
+            const successes = [];
+            const failures = [];
+
+            results.forEach((result, index) => {
+                if (result.status === "fulfilled") {
+                    successes.push(result.value);
+                    console.log(`Request ${index + 1} succeeded:`, result.value.data);
+                } else {
+                    failures.push(result.reason);
+                    console.error(`Request ${index + 1} failed:`, result.reason);
+                }
+            });
+
+            if (successes.length > 0) {
+                console.log("Partial success: Some requests completed successfully.");
+            } else {
+                console.log("All requests failed.");
+            }
+            res.send("Ok")
+        })
+        .catch((error) => {
+            console.error("Unexpected error:", error);
+            res.send("Ok")
+        });
 
 });
 
