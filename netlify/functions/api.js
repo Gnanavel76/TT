@@ -39,9 +39,12 @@ router.get('/health', (req, res) => {
 
 router.post('/webhook', (req, res) => {
     console.log(req.body)
-    let alertMessage = req.body.content.html
-    let fromAddress = req.body.content.fromAddress
+    let alertMessage = req.body.html
+    let fromAddress = req.body.fromAddress
 
+    if (alertMessage === "Sample html content") {
+        res.send("Ok")
+    }
     if (fromAddress !== expectedFromAddress) {
         console.log("Email mismatch")
         return
