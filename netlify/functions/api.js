@@ -15,6 +15,7 @@ const STGY2_AUTH_TOKEN = 'c1140b16-ee9f-44b3-b1d5-8d3a36609158'
 const expectedFromAddress = "noreply@tradingview.com";
 
 const getActionValues = (action) => {
+    console.log("action=" + action)
     switch (action) {
         case "buy":
             return { key: "nifty_buy", value: "1" }
@@ -39,7 +40,7 @@ router.get('/health', (req, res) => {
 
 router.post('/webhook', (req, res) => {
     console.log(req.body)
-    let alertMessage = req.body.html
+    let alertMessage = req.body.summary
     let fromAddress = req.body.fromAddress
 
     if (alertMessage === "Sample html content") {
