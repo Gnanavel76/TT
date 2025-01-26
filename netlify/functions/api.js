@@ -18,11 +18,11 @@ const getActionValues = (action) => {
     console.log("action=" + action)
     switch (action) {
         case "buy":
-            return { key: "nifty_buy", value: "1" }
+            return { key: "nifty_buy", value: "1", key1: "nifty_sell", value1: "0" }
         case "closebuy":
             return { key: "nifty_buy", value: "0" }
         case "sell":
-            return { key: "nifty_sell", value: "1" }
+            return { key: "nifty_sell", value: "1", key1: "nifty_buy", value1: "0" }
         case "closesell":
             return { key: "nifty_sell", value: "0" }
         default:
